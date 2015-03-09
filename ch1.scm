@@ -1,3 +1,6 @@
+; SICP Exercise Solutions
+
+; Ex. 1.1
 10
 (+ 5 3 4)
 
@@ -22,10 +25,10 @@
    (+ a 1)
    )
 
+; Ex. 1.2
 (/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7)))
 
-(define (foo a b) (+ a b))
-
+; Ex. 1.3
 (define (square x) (* x x))
 (define (sum-of-larger-squares a b c)
   (cond ((and (< a b) (< a c)) (+ (square b) (square c)))
@@ -33,3 +36,72 @@
         (else (+ (square a) (square b)))
         )
   )
+
+; Ex. 1.4
+(define (a-plus-abs-b a b)
+  ((if (> b 0) + -) a b)
+  )
+
+; Ex. 1.5
+; Applicative-order evaluation evaluates the procedure's arguments first.
+; This would result in an error. Normal-order evaluation lazily evaluates
+; arguments, so the procedures would yield 0.
+
+; Ex. 1.6
+(define (new-if predicate then-clause else-clause)
+  (cond (predicate then-clause)
+        (else else-clause)
+        )
+  )
+
+; Ex. 1.7
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001)
+  )
+(define (new-good-enough? guess x)
+  (< (abs (- 1 (/ (improve guess x) guess) )) 0.01)
+  )
+(define (average x y)
+  (/ (+ x y) 2)
+  )
+(define (improve guess x)
+  (average guess (/ x guess))
+  )
+(define (sqrt-iter guess x)
+  (if (new-good-enough? guess x)
+    guess
+    (sqrt-iter (improve guess x)
+               x
+               )
+    )
+  )
+(define (sqrt x)
+  (sqrt-iter 1.0 x)
+  )
+(sqrt 100000000000000000000000000)
+
+; Ex 1.8
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001)
+  )
+(define (new-good-enough? guess x)
+  (< (abs (- 1 (/ (improve guess x) guess) )) 0.01)
+  )
+(define (average x y)
+  (/ (+ x y) 2)
+  )
+(define (improve guess x)
+  (/ (+ (/ x (* guess guess)) (* 2 guess)) 3)
+  )
+(define (cbrt-iter guess x)
+  (if (new-good-enough? guess x)
+    guess
+    (cbrt-iter (improve guess x)
+               x
+               )
+    )
+  )
+(define (cbrt x)
+  (cbrt-iter 1.0 x)
+  )
+(cbrt 125)
