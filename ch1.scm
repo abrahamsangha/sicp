@@ -140,3 +140,65 @@
 (define (g n) (A 1 n)) ; 2^n
 (define (h n) (A 2 n)) ; 2^2^2...^2 (n times)
 
+; Example: Counting Change
+(define (count-change amount)
+  (cc amount 5))
+(define (cc amount kinds-of-coins)
+  (cond ((= amount 0) 1)
+        ((or (< amount 0) (= kinds-of-coins 0)) 0)
+        (else (+ (cc amount
+                     (- kinds-of-coins 1))
+                 (cc (- amount
+                        (first-denomination kinds-of-coins))
+                     kinds-of-coins)))))
+(define (first-denomination kinds-of-coins)
+  (cond ((= kinds-of-coins 1) 1)
+        ((= kinds-of-coins 2) 5)
+        ((= kinds-of-coins 3) 10)
+        ((= kinds-of-coins 4) 25)
+        ((= kinds-of-coins 5) 50)))
+
+; (count-change 10) => (cc 10 5)
+; amount = 10, kinds-of-coins = 5
+; (cc 10 5) = (+ (cc 10 4) (cc (- 10 50) 5))
+; (cc 10 4) = (+ (cc 10 3) (cc (- 10 25) 4))
+; (cc 10 3) = (+ (cc 10 2) (cc (- 10 10) 3))
+; (cc 10 2) = (+ (cc 10 1) (cc (- 10 5) 2))
+; (cc 10 1) = (+ (cc 10 0) (cc (- 10 1) 1))
+
+; Ex. 1.11
+; f(n) = n if n < 3
+;        f(n - 1) + 2f(n-2) +3f(n - 3) if n >= 3
+
+; recursive process
+(define (f n)
+  (cond ((< n 3) n)
+        (else (+ (f (- n 1))
+                 (* 2 (f (- n 2)))
+                 (* 3 (f (- n 3)))))))
+
+; iterative process
+; (f 4) => (+ f(3) 2f(2) 3f(1))
+; (f 5) => (+ f(4) 2f(3) 3f(2))
+; 0  1  2  3  4   5   6   7
+; 0, 1, 2, 4, 11, 25, 59, 142,...
+; (f 3) => 2 + 2*1 + 3*0 = 2 + 2 + 0
+; (f 4) => 4 + 2*2 + 3*1 = 4 + 4 + 3
+; (f 5) => 11 + 2*4 + 3*2= 11 + 8 + 6
+; (f 6) => 25 + 2*11 + 3*4
+; a = -1, b = 0, c = 1,      n = 2, f(n) = 2
+; a = 0, b = 1, c = 2        n = 3, f(n) = 4
+; a = 1, b = 2, c = 4        n = 4, f(n) = 11
+; iter a b c n
+;    if n < 3
+;    n
+;    iter b c c+2b+3a n-1
+
+(define (f n)
+  (if (< n 3)
+      n
+      (iter 0 1 2 n)))
+(define (iter a b c n)
+  (if (< n 3)
+    c
+    (iter b c (+ c (* 2 b) (* 3 a)) (- n 1))))
