@@ -202,3 +202,16 @@
   (if (< n 3)
     c
     (iter b c (+ c (* 2 b) (* 3 a)) (- n 1))))
+
+; Ex. 1.12
+;              1
+;             1 1
+;            1 2 1
+;           1 3 3 1
+;          1 4 6 4 1
+
+(define (pascal row elem)
+  (cond ((or (= elem 1)(= elem row)) 1)
+        (else (+ (pascal (- row 1) (- elem 1)) (pascal (- row 1) elem)))
+        )
+  )
