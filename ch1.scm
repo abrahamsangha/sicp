@@ -215,3 +215,60 @@
         (else (+ (pascal (- row 1) (- elem 1)) (pascal (- row 1) elem)))
         )
   )
+
+; Ex 1.13
+
+; sqrt procedure
+(define (new-good-enough? guess x)
+  (< (abs (- 1 (/ (improve guess x) guess) )) 0.001)
+  )
+(define (average x y)
+  (/ (+ x y) 2)
+  )
+(define (improve guess x)
+  (average guess (/ x guess))
+  )
+(define (sqrt-iter guess x)
+  (if (new-good-enough? guess x)
+    guess
+    (sqrt-iter (improve guess x)
+               x
+               )
+    )
+  )
+(define (sqrt x)
+  (sqrt-iter 1.0 x)
+  )
+;
+; exp proc
+(define (expt b n)
+  (if (= n 0)
+      1
+      (* b (expt b (- n 1)))))
+;
+; fib procedure
+(define (fib n)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (fib (- n 1))
+                 (fib (- n 2))))))
+;
+; phi proc
+(define phi
+  (/ (+ 1 (sqrt 5)) 2)
+  )
+;
+;psi proc
+(define psi
+  (/ (- 1 (sqrt 5)) 2)
+  )
+;
+;fib approximation proc
+(define (fibx n)
+  (/ (- (expt phi n) (expt psi n)) (sqrt 5))
+  )
+;
+; closest integer proc
+(define (close n approx)
+  (< (abs (- (/ approx n) 1)) 0.01)
+  )
