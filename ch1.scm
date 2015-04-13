@@ -616,3 +616,22 @@
     (* (sum f (+ a (/ dx 2.0)) add-dx b)
             dx))
 
+; Ex 1.30
+(define (sum term a next b)
+  (define (iter a result)
+    (if (> a b)
+      result
+      (iter (next a) (+ result (term a)))))
+  (iter a 0)
+  )
+(define (simpson f a b n)
+  (define (inc x) (+ x 1))
+  (define h (/ (- b a) n))
+  (define (y k) (f (+ a (* k h))))
+  (define (term k)
+    (cond ((or (= k 0) (= k n)) (y k))
+          ((odd? k) (* 4 (y k)))
+          ((even? k) (* 2 (y k)))))
+  (* (/ h 3) (sum term a inc n))
+  )
+(define (cube x) (* x x x))
