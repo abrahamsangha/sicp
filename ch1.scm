@@ -635,3 +635,74 @@
   (* (/ h 3) (sum term a inc n))
   )
 (define (cube x) (* x x x))
+
+; Ex 1.31
+; recursive process
+(define (product term a next b)
+  (if (> a b)
+    1
+    (* (term a) (product term (next a) next b))))
+(define (inc x) (+ 1 x))
+(define (cube x) (* x x x))
+(define (square x) (* x x))
+(define (identity x) x)
+(define (factorial x)
+  (product identity 1 inc x))
+
+; iterative process
+(define (product term a next b)
+  (define (product-iter a result)
+    (if (> a b)
+      result
+      (product-iter (next a) (* result (term a)))))
+  (product-iter a 1))
+(define (inc x) (+ 1 x))
+(define (factorial x)
+  (product identity 1 inc x))
+
+; pi approximations
+(define (product term a next b)
+  (define (product-iter a result)
+    (if (> a b)
+      result
+      (product-iter (next a) (* result (term a)))))
+  (product-iter a 1))
+(define (inc x) (+ 2 x))
+(define (identity x) x)
+(define (odd-series x)
+  (product identity 3 inc x))
+(define (even-series x)
+  (product identity 4 inc x))
+; pi/8
+(/ (* (even-series 8) (even-series 6)) (* (odd-series 7) (odd-series 7)))
+; pi
+(define (pi-approx x)
+  (cond ((even? x) (* 8 (/ (* (even-series x) (even-series (- x 2))) (* (odd-series (- x 1)) (odd-series (- x 1))))))
+        ((odd? x) (* 8 (/ (* (even-series (+ x 1)) (even-series (- x 1))) (* (odd-series x) (odd-series x)))))))
+
+; Ex 1.32
+; recursive
+(define (accumulate combiner null-value term a next b)
+  (if (> a b)
+    null-value
+    (combiner (term a) (accumulate combiner null-value term (next a) next b))))
+(define (inc x) (+ 1 x))
+(define (cube x) (* x x x))
+(define (square x) (* x x))
+(accumulate + 0 square 1 inc 3)
+(accumulate * 1 square 1 inc 3)
+
+; iterative
+(define (accumulate combiner null-value term a next b)
+  (define (accumulate-iter a result)
+    (if (> a b)
+      result
+      (accumulate-iter (next a) (combiner (term a) result))
+      )
+    )
+  (accumulate-iter a null-value))
+(define (inc x) (+ 1 x))
+(define (cube x) (* x x x))
+(define (square x) (* x x))
+(accumulate + 0 square 1 inc 3)
+(accumulate * 1 square 1 inc 3)
